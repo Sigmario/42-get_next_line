@@ -6,126 +6,114 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:57:53 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/06/19 14:36:33 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/06/19 21:08:20 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-static int	ft_char_count(char *s, char c, int *index_chars)
-{
-	int	len;
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 10
+#endif
 
-	len = 0;
-	while (s[*index_chars] && s[*index_chars] == c)
-		(*index_chars)++;
-	while (s[*index_chars + len] && s[*index_chars + len] != c)
-		len++;
-	return (len);
-}
-
-static int	ft_word_count(char *s, char c)
+char	*ft_lastline(char *str)
 {
-	int	i;
-	int	count;
+	int		i;
+	char	*line;
 
 	i = 0;
-	count = 0;
-	while (s[i])
-	{
-		if (s[i] == c)
-		{
-			while (s[i] && s[i] == c)
-				i++;
-		}
-		else
-		{
-			while (s[i] && s[i] != c)
-				i++;
-			count++;
-		}
-	}
-	return (count);
-}
-
-char	**ft_split(char *s, char const c)
-{
-	char	**tab;
-	int		index_words;
-	int		index_chars;
-	int		nb_words;
-	int		nb_chars;
-
-	if (s == NULL)
-		return (NULL);
-	index_words = 0;
-	index_chars = 0;
-	nb_words = ft_word_count(s, c);
-	tab = malloc(sizeof(char *) * (nb_words + 1));
-	if (tab == NULL)
-		return (NULL);
-	while (index_words < nb_words)
-	{
-		nb_chars = ft_char_count(s, c, &index_chars);
-		tab[index_words] = ft_substr(s, index_chars, nb_chars);
-		index_chars += nb_chars;
-		index_words++;
-	}
-	return (tab);
-}
-
-int	ft_lastline(char *str)
-{
-	static int	i = 0;
-	if (str == NULL)
-		return (0);
-	while(str[i])
-	{
-		if (str[i] == '\n')
-			return (1);
+	while (str[i] != '\n')
 		i++;
+	if (str[i] && str[i] == '\n')
+		i++;
+	line = malloc(sizeof(char) * (i + 1));
+	if (line == NULL)
+		return (NULL);
+	i = 0;
+	while (str[i] != '\n')
+	{
+		line[i] = str[i];
+		i++;
+		if (str[i] && str[i] == '\n')
+		{
+			line[i] = str[i];
+			i++;
+			break ;
+		}
 	}
-	return (0);
+	line[i] = '\0';
+	return (line);
 }
+
+char	*ft_getbuf(char *str)
+{
+	int		i;
+	int		j;
+	int		size;
+	char	*buf;
+
+	i = 0;
+	j = 0;
+	size = 0;
+	while (str[j] != '\0')
+		j++;
+	while (str[i] && str[i] != '\n')
+		i++;
+	if (str[i] && str[i] == '\n')
+		i++;
+	size = i - j;
+	if (size < 0)
+		size *= -1;
+	buf = malloc(sizeof(char) * (size + 1));
+	j = 0;
+	while (str[i])
+		buf[j++] = str[i++];
+	free(str);
+	return (buf);
+}
+
 char	*get_next_line(int fd)
 {
-	int		size;
-	char static	buf[BUFFER_SIZE];
-	char	*str;
+	int			size;
+	char		buf[BUFFER_SIZE + 1];
+	static char	*str;
+	char		*line;
 
 	size = 1;
-	str = NULL;
-	str = ft_substr(buf, fd, size);
-	while (size > 0 && ft_lastline(buf) == 0)
+	while (!ft_strchr(str, '\n') && size > 0)
 	{
-		ft_strjoin(buf, str); 
-		size = read(fd, buf, BUFFER_SIZE); //buf = Alpha\nBrav // buf = o\nCharlie\n // buf = Delta\nEcho
+		size = read(fd, buf, BUFFER_SIZE);
 		buf[size] = '\0';
+		str = ft_strjoin(str, buf);
 	}
+	line = ft_lastline(str);
+	str = ft_getbuf(str);
 	if (fd == -1)
-	{
-		printf("Error: \"open\" failed.\n");
 		return (NULL);
-	}
-	str = *ft_split(buf, '\n');
-	return (ft_strdup(str));
+	return (line);
 }
 
-int	main()
+/*
+
+int	main(void)
 {
-	int	fd;
-	int	i;
+	int fd;
+	int i;
 	char *line;
 	i = 1;
 	fd = open("testline", O_RDONLY);
-	while(i <= 2)
+	while (i)
 	{
 		line = get_next_line(fd);
-		printf("- LINE %d:\n%s\n\n", i ,line);
+		printf("————————————————————\n");
+		printf("  N°%d\t| %s", i, line);
 		free(line);
 		i++;
 	}
+	printf("————————————————————\n");
 	close(fd);
 	return (0);
 }
+
+*/
