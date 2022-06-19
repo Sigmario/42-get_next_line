@@ -6,7 +6,7 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 15:44:28 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/06/16 16:59:09 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/06/19 13:54:58 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	return (dst);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char const *s2)
 {
 	size_t	i[3];
 	char	*res;
@@ -56,6 +56,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_memcpy(res, s1, i[1]);
 	ft_memcpy(res + i[1], s2, i[2]);
 	res[i[1] + i[2]] = 0;
+	//free(s1);
 	return (res);
 }
 
@@ -64,7 +65,7 @@ char	*ft_strdup(const char *s)
 	char	*d;
 	char	*t;
 
-	d = malloc(ft_strlen(s) + 1 * sizeof(char));
+	d = malloc((ft_strlen(s) + 1) * sizeof(char));
 	if (d == NULL)
 		return (NULL);
 	t = d;
