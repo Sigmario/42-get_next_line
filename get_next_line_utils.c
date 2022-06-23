@@ -6,23 +6,25 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 15:44:28 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/06/19 21:07:59 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/06/23 16:27:16 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(char *s)
 {
 	size_t	i;
 
 	i = 0;
-	while (s && s[i])
+	if (s == NULL)
+		return (0);
+	while (s[i])
 		i++;
 	return (i);
 }
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+void	*ft_memcpy(void *dst, void *src, size_t n)
 {
 	size_t	i;
 	char	*d;
@@ -41,28 +43,25 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	return (dst);
 }
 
-char	*ft_strjoin(char *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	i[3];
 	char	*res;
 
-	if (s1 != NULL || s2 != NULL)
-	{
-		i[1] = ft_strlen(s1);
-		i[2] = ft_strlen(s2);
-		res = (char *)malloc(i[1] + i[2] + 1);
-		if (res == NULL)
-			return (NULL);
-		ft_memcpy(res, s1, i[1]);
-		ft_memcpy(res + i[1], s2, i[2]);
-		res[i[1] + i[2]] = 0;
-	}
-	else
+	if (s1 == NULL || s2 == NULL)
 		return (NULL);
+	i[1] = ft_strlen(s1);
+	i[2] = ft_strlen(s2);
+	res = (char *)malloc(i[1] + i[2] + 1);
+	if (res == NULL)
+		return (NULL);
+	ft_memcpy(res, s1, i[1]);
+	ft_memcpy(res + i[1], s2, i[2]);
+	res[i[1] + i[2]] = 0;
 	return (res);
 }
 
-char	*ft_strdup(const char *s)
+char	*ft_strdup(char *s)
 {
 	char	*d;
 	char	*t;
@@ -77,7 +76,7 @@ char	*ft_strdup(const char *s)
 	return (d);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(char *s, int c)
 {
 	while (s && *s != (char)c)
 	{

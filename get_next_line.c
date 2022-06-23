@@ -6,7 +6,7 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:57:53 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/06/19 21:08:20 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/06/23 17:28:41 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,56 +20,52 @@
 char	*ft_lastline(char *str)
 {
 	int		i;
+	int		len;
 	char	*line;
 
-	i = 0;
-	while (str[i] != '\n')
-		i++;
-	if (str[i] && str[i] == '\n')
-		i++;
-	line = malloc(sizeof(char) * (i + 1));
+	len = 0;
+	while (str[len] != '\0' && str[len] != '\n')
+		len++;
+	if (str[len] == '\n')
+		len++;
+	line = malloc(sizeof(char) * (len + 1));
 	if (line == NULL)
 		return (NULL);
 	i = 0;
-	while (str[i] != '\n')
+	while (i < len)
 	{
 		line[i] = str[i];
 		i++;
-		if (str[i] && str[i] == '\n')
-		{
-			line[i] = str[i];
-			i++;
-			break ;
-		}
 	}
 	line[i] = '\0';
+	if (line[0] == '\0')
+	{
+		free(line);
+		return (NULL);
+	}
 	return (line);
 }
 
 char	*ft_getbuf(char *str)
 {
 	int		i;
-	int		j;
-	int		size;
+	int		len;
+	int		rest;
 	char	*buf;
 
 	i = 0;
-	j = 0;
-	size = 0;
-	while (str[j] != '\0')
-		j++;
-	while (str[i] && str[i] != '\n')
+	len = ft_strlen(str);
+	while (str[i] != '\0' && str[i] != '\n')
 		i++;
-	if (str[i] && str[i] == '\n')
+	if (str[i] == '\n')
 		i++;
-	size = i - j;
-	if (size < 0)
-		size *= -1;
-	buf = malloc(sizeof(char) * (size + 1));
-	j = 0;
+	rest = len - i;
+	buf = malloc(sizeof(char) * (rest + 1));
+	if (buf == NULL)
+		return (NULL);
+	len = 0;
 	while (str[i])
-		buf[j++] = str[i++];
-	free(str);
+		buf[len++] = str[i++];
 	return (buf);
 }
 
@@ -80,21 +76,27 @@ char	*get_next_line(int fd)
 	static char	*str;
 	char		*line;
 
+	// printf("Address: %p\n", str);
+	if (fd <= -1 || fd >= 1024)
+		return (NULL);
 	size = 1;
-	while (!ft_strchr(str, '\n') && size > 0)
+	while (size > 0)
 	{
 		size = read(fd, buf, BUFFER_SIZE);
 		buf[size] = '\0';
-		str = ft_strjoin(str, buf);
+		if (!str)
+			str = ft_strdup(buf);
+		else
+			str = ft_strjoin(str, buf);
+		if (ft_strchr(str, '\n'))
+			break ;
 	}
 	line = ft_lastline(str);
 	str = ft_getbuf(str);
-	if (fd == -1)
-		return (NULL);
 	return (line);
 }
 
-/*
+///*
 
 int	main(void)
 {
@@ -103,9 +105,11 @@ int	main(void)
 	char *line;
 	i = 1;
 	fd = open("testline", O_RDONLY);
-	while (i)
-	{
+	while (i <= 30)
+	{	
 		line = get_next_line(fd);
+		if (line == NULL)
+			break ;
 		printf("————————————————————\n");
 		printf("  N°%d\t| %s", i, line);
 		free(line);
@@ -116,4 +120,4 @@ int	main(void)
 	return (0);
 }
 
-*/
+//*/
