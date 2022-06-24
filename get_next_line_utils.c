@@ -6,11 +6,12 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 15:44:28 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/06/23 16:27:16 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/06/24 18:48:19 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 size_t	ft_strlen(char *s)
 {
@@ -54,8 +55,10 @@ char	*ft_strjoin(char *s1, char *s2)
 	i[2] = ft_strlen(s2);
 	res = (char *)malloc(i[1] + i[2] + 1);
 	if (res == NULL)
-		return (NULL);
+		return (free(s1), NULL);
 	ft_memcpy(res, s1, i[1]);
+	if (s1[0])
+		free(s1);
 	ft_memcpy(res + i[1], s2, i[2]);
 	res[i[1] + i[2]] = 0;
 	return (res);
@@ -66,6 +69,8 @@ char	*ft_strdup(char *s)
 	char	*d;
 	char	*t;
 
+	if (s == NULL)
+		return (NULL);
 	d = malloc((ft_strlen(s) + 1) * sizeof(char));
 	if (d == NULL)
 		return (NULL);

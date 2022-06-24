@@ -6,7 +6,7 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:57:53 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/06/23 17:28:41 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/06/24 19:41:58 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,7 @@ char	*ft_lastline(char *str)
 	}
 	line[i] = '\0';
 	if (line[0] == '\0')
-	{
-		free(line);
 		return (NULL);
-	}
 	return (line);
 }
 
@@ -66,7 +63,10 @@ char	*ft_getbuf(char *str)
 	len = 0;
 	while (str[i])
 		buf[len++] = str[i++];
-	return (buf);
+	buf[len] = '\0';
+	if (buf[0] == '\0')
+		free(buf);
+	return (free(str), buf);
 }
 
 char	*get_next_line(int fd)
@@ -76,7 +76,6 @@ char	*get_next_line(int fd)
 	static char	*str;
 	char		*line;
 
-	// printf("Address: %p\n", str);
 	if (fd <= -1 || fd >= 1024)
 		return (NULL);
 	size = 1;
