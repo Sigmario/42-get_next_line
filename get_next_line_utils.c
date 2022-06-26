@@ -6,7 +6,7 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 15:44:28 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/06/26 17:34:04 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/06/26 21:54:52 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	i[2] = ft_strlen(s2);
 	res = (char *)malloc(i[1] + i[2] + 1);
 	if (res == NULL)
-
-		free(res);
+		return (NULL);
 	ft_memcpy(res, s1, i[1]);
 	ft_memcpy(res + i[1], s2, i[2]);
 	res[i[1] + i[2]] = 0;
