@@ -6,7 +6,7 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:57:53 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/06/26 19:37:22 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/06/26 21:22:15 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,31 +98,6 @@ char	*get_next_line(int fd)
 
 ///*
 
-// #include <stdio.h>
-// int	main(void)
-// {
-// 	int fd;
-// 	int i;
-// 	char *line;
-// 	i = 1;
-// 	fd = open("testet.txt", O_RDONLY);
-// 	while (i <= 2)
-// 	{	
-// 		line = get_next_line(fd);
-// 		if (line == NULL)
-// 			break ;
-// 		printf("————————————————————\n");
-// 		printf("  N°%d\t| %s", i, line);
-// 		free(line);
-// 		i++;
-// 	}
-// 	printf("————————————————————\n");
-// 	close(fd);
-// 	return (0);
-// }
-
-//*/
-
 #include <stdio.h>
 int	main(void)
 {
@@ -130,18 +105,20 @@ int	main(void)
 	int i;
 	char *line;
 	i = 1;
-	fd = open("testet.txt", O_RDONLY);
-	line = get_next_line(fd);
-	while (line)
+	fd = open("testline", O_RDONLY);
+	while (i)
 	{	
+		line = get_next_line(fd);
+		if (line == NULL)
+			break ;
 		printf("————————————————————\n");
 		printf("  N°%d\t| %s", i, line);
 		free(line);
 		i++;
-		line = get_next_line(fd);
 	}
-	free(line);
 	printf("————————————————————\n");
 	close(fd);
 	return (0);
 }
+
+//*/
