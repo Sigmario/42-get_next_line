@@ -6,7 +6,7 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:57:53 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/06/26 12:19:56 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/06/26 19:37:22 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # define BUFFER_SIZE 10
 #endif
 
-char	*ft_lastline(char *str)
+char	*ft_last_line(char *str)
 {
 	int		i;
 	int		len;
@@ -42,7 +42,7 @@ char	*ft_lastline(char *str)
 	return (line);
 }
 
-char	*ft_getbuf(char *str)
+char	*ft_get_buf(char *str)
 {
 	int		i;
 	int		len;
@@ -64,7 +64,7 @@ char	*ft_getbuf(char *str)
 		buf[len++] = str[i++];
 	buf[len] = '\0';
 	if (buf[0] == '\0')
-		free(buf);
+		return (free(buf), NULL);
 	return (free(str), buf);
 }
 
@@ -82,19 +82,46 @@ char	*get_next_line(int fd)
 	{
 		size = read(fd, buf, BUFFER_SIZE);
 		buf[size] = '\0';
-		if (!str)
+		if (size == -1 || (size == 0 && ft_strlen(str) == 0))
+			return (NULL);
+		if (str == NULL)
 			str = ft_strdup(buf);
 		else
 			str = ft_strjoin(str, buf);
 		if (ft_strchr(str, '\n'))
 			break ;
 	}
-	line = ft_lastline(str);
-	str = ft_getbuf(str);
+	line = ft_last_line(str);
+	str = ft_get_buf(str);
 	return (line);
 }
 
 ///*
+
+// #include <stdio.h>
+// int	main(void)
+// {
+// 	int fd;
+// 	int i;
+// 	char *line;
+// 	i = 1;
+// 	fd = open("testet.txt", O_RDONLY);
+// 	while (i <= 2)
+// 	{	
+// 		line = get_next_line(fd);
+// 		if (line == NULL)
+// 			break ;
+// 		printf("————————————————————\n");
+// 		printf("  N°%d\t| %s", i, line);
+// 		free(line);
+// 		i++;
+// 	}
+// 	printf("————————————————————\n");
+// 	close(fd);
+// 	return (0);
+// }
+
+//*/
 
 #include <stdio.h>
 int	main(void)
@@ -103,20 +130,18 @@ int	main(void)
 	int i;
 	char *line;
 	i = 1;
-	fd = open("testline", O_RDONLY);
-	while (i <= 27)
+	fd = open("testet.txt", O_RDONLY);
+	line = get_next_line(fd);
+	while (line)
 	{	
-		line = get_next_line(fd);
-		if (line == NULL)
-			break ;
 		printf("————————————————————\n");
 		printf("  N°%d\t| %s", i, line);
 		free(line);
 		i++;
+		line = get_next_line(fd);
 	}
+	free(line);
 	printf("————————————————————\n");
 	close(fd);
 	return (0);
 }
-
-//*/
