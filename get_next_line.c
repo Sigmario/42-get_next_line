@@ -6,12 +6,11 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:57:53 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/06/24 19:41:58 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/06/26 12:19:56 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 #ifndef BUFFER_SIZE
 # define BUFFER_SIZE 10
@@ -39,7 +38,7 @@ char	*ft_lastline(char *str)
 	}
 	line[i] = '\0';
 	if (line[0] == '\0')
-		return (NULL);
+		return (free(line), NULL);
 	return (line);
 }
 
@@ -97,6 +96,7 @@ char	*get_next_line(int fd)
 
 ///*
 
+#include <stdio.h>
 int	main(void)
 {
 	int fd;
@@ -104,7 +104,7 @@ int	main(void)
 	char *line;
 	i = 1;
 	fd = open("testline", O_RDONLY);
-	while (i <= 30)
+	while (i <= 27)
 	{	
 		line = get_next_line(fd);
 		if (line == NULL)
