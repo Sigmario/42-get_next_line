@@ -6,11 +6,13 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:57:53 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/06/26 21:49:18 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/06/29 12:28:18 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
+
 
 #ifndef BUFFER_SIZE
 # define BUFFER_SIZE 10
@@ -63,8 +65,6 @@ char	*ft_get_buf(char *str)
 	while (str[i])
 		buf[len++] = str[i++];
 	buf[len] = '\0';
-	if (buf[0] == '\0')
-		return (free(buf), NULL);
 	return (free(str), buf);
 }
 
@@ -83,10 +83,10 @@ char	*get_next_line(int fd)
 		size = read(fd, buf, BUFFER_SIZE);
 		buf[size] = '\0';
 		if (size == -1 || (size == 0 && ft_strlen(str) == 0))
-			return (NULL);
+			return (free(str), NULL);
 		if (str == NULL)
 			str = ft_strdup(buf);
-		else
+		else if (buf[0] != '\0')
 			str = ft_strjoin(str, buf);
 		if (ft_strchr(str, '\n'))
 			break ;
@@ -96,7 +96,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-///*
+/*
 
 #include <stdio.h>
 int	main(void)
@@ -120,4 +120,4 @@ int	main(void)
 	return (0);
 }
 
-//*/
+*/
