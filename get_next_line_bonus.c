@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/14 14:57:53 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/06/29 23:06:00 by julmuntz         ###   ########.fr       */
+/*   Created: 2022/06/29 15:31:06 by julmuntz          #+#    #+#             */
+/*   Updated: 2022/06/29 23:03:01 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_last_line(char *str)
 {
@@ -65,52 +65,67 @@ char	*ft_get_buf(char *str)
 char	*get_next_line(int fd)
 {
 	int			size;
-	static char	buf[BUFFER_SIZE + 1];
-	static char	*str;
+	char		*buf;
+	static char	*str[FOPEN_MAX];
 	char		*line;
 
 	if (fd <= -1 || fd >= FOPEN_MAX)
 		return (NULL);
 	size = 1;
+	buf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	while (size > 0)
 	{
 		size = read(fd, buf, BUFFER_SIZE);
-		if (size == -1 || (size == 0 && ft_strlen(str) == 0))
-			return (free(str), NULL);
+		if (size == -1 || (size == 0 && ft_strlen(str[fd]) == 0))
+			return (free(buf), free(str[fd]), NULL);
 		buf[size] = '\0';
-		if (str == NULL)
-			str = ft_strdup(buf);
+		if (str[fd] == NULL)
+			str[fd] = ft_strdup(buf);
 		else if (buf[0] != '\0')
-			str = ft_strjoin(str, buf);
-		if (ft_strchr(str, '\n'))
+			str[fd] = ft_strjoin(str[fd], buf);
+		if (ft_strchr(str[fd], '\n'))
 			break ;
 	}
-	line = ft_last_line(str);
-	str = ft_get_buf(str);
-	return (line);
+	line = ft_last_line(str[fd]);
+	str[fd] = ft_get_buf(str[fd]);
+	return (free(buf), line);
 }
 
 /*
 
 int	main(void)
 {
-	int		fd;
+	int		fd[FOPEN_MAX];
 	int		i;
-	char	*line;
+	char	*line1;
+	char	*line2;
+	char	*line3;
 
 	i = 1;
-	fd = open("testline", O_RDONLY);
+	fd[0] = open("testline-1", O_RDONLY);
+	fd[1] = open("testline-2", O_RDONLY);
+	fd[2] = open("testline-3", O_RDONLY);
 	while (i)
 	{	
-		line = get_next_line(fd);
-		if (line == NULL)
+		line1 = get_next_line(fd[0]);
+		line2 = get_next_line(fd[1]);
+		line3 = get_next_line(fd[2]);
+		if (line1 == NULL && line2 == NULL && line3 == NULL)
 			break ;
-		printf("————————————————————\n");
-		printf("  N°%d\t| %s", i, line);
-		free(line);
+		printf("——————————————————————————————————\n");
+		printf(" Line n°%d of...", i);
+		printf("\tFD 1:\t%s", line1);
+		printf("\t\tFD 2:\t%s", line2);
+		printf("\t\tFD 3:\t%s", line3);
+		free(line1);
+		free(line2);
+		free(line3);
 		i++;
 	}
-	close(fd);
+	printf("——————————————————————————————————\n");
+	close(fd[0]);
+	close(fd[1]);
+	close(fd[2]);
 	return (0);
 }
 
