@@ -6,13 +6,13 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 15:31:06 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/06/29 23:03:01 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/07/01 17:39:57 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-char	*ft_last_line(char *str)
+char	*ft_until_nl(char *str)
 {
 	int		i;
 	int		len;
@@ -38,7 +38,7 @@ char	*ft_last_line(char *str)
 	return (line);
 }
 
-char	*ft_get_buf(char *str)
+char	*ft_post_nl(char *str)
 {
 	int		i;
 	int		len;
@@ -86,8 +86,8 @@ char	*get_next_line(int fd)
 		if (ft_strchr(str[fd], '\n'))
 			break ;
 	}
-	line = ft_last_line(str[fd]);
-	str[fd] = ft_get_buf(str[fd]);
+	line = ft_until_nl(str[fd]);
+	str[fd] = ft_post_nl(str[fd]);
 	return (free(buf), line);
 }
 
