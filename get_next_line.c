@@ -6,7 +6,7 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:57:53 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/07/01 17:39:57 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/07/03 15:06:43 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ char	*ft_until_nl(char *str)
 		i++;
 	}
 	line[i] = '\0';
-	if (line[0] == '\0')
-		return (free(line), NULL);
 	return (line);
 }
 
@@ -51,6 +49,8 @@ char	*ft_post_nl(char *str)
 		i++;
 	if (str[i] == '\n')
 		i++;
+	if (str[i] == '\0')
+		return (free(str), NULL);
 	rest = len - i;
 	buf = malloc(sizeof(char) * (rest + 1));
 	if (buf == NULL)
@@ -100,13 +100,11 @@ int	main(void)
 
 	i = 1;
 	fd = open("testline", O_RDONLY);
-	while (i)
+	while (i <= 7)
 	{	
 		line = get_next_line(fd);
-		if (line == NULL)
-			break ;
-		printf("————————————————————\n");
-		printf("  N°%d\t| %s", i, line);
+		puts("");
+		printf("—— N°%d —>\t%s", i, line);
 		free(line);
 		i++;
 	}

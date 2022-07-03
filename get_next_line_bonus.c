@@ -6,7 +6,7 @@
 /*   By: julmuntz <julmuntz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 15:31:06 by julmuntz          #+#    #+#             */
-/*   Updated: 2022/07/01 17:39:57 by julmuntz         ###   ########.fr       */
+/*   Updated: 2022/07/03 15:06:50 by julmuntz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ char	*ft_until_nl(char *str)
 		i++;
 	}
 	line[i] = '\0';
-	if (line[0] == '\0')
-		return (free(line), NULL);
 	return (line);
 }
 
@@ -51,6 +49,8 @@ char	*ft_post_nl(char *str)
 		i++;
 	if (str[i] == '\n')
 		i++;
+	if (str[i] == '\0')
+		return (free(str), NULL);
 	rest = len - i;
 	buf = malloc(sizeof(char) * (rest + 1));
 	if (buf == NULL)
@@ -95,37 +95,21 @@ char	*get_next_line(int fd)
 
 int	main(void)
 {
-	int		fd[FOPEN_MAX];
+	int		fd;
 	int		i;
-	char	*line1;
-	char	*line2;
-	char	*line3;
+	char	*line;
 
 	i = 1;
-	fd[0] = open("testline-1", O_RDONLY);
-	fd[1] = open("testline-2", O_RDONLY);
-	fd[2] = open("testline-3", O_RDONLY);
-	while (i)
+	fd = open("testline", O_RDONLY);
+	while (i <= 7)
 	{	
-		line1 = get_next_line(fd[0]);
-		line2 = get_next_line(fd[1]);
-		line3 = get_next_line(fd[2]);
-		if (line1 == NULL && line2 == NULL && line3 == NULL)
-			break ;
-		printf("——————————————————————————————————\n");
-		printf(" Line n°%d of...", i);
-		printf("\tFD 1:\t%s", line1);
-		printf("\t\tFD 2:\t%s", line2);
-		printf("\t\tFD 3:\t%s", line3);
-		free(line1);
-		free(line2);
-		free(line3);
+		line = get_next_line(fd);
+		puts("");
+		printf("—— N°%d —>\t%s", i, line);
+		free(line);
 		i++;
 	}
-	printf("——————————————————————————————————\n");
-	close(fd[0]);
-	close(fd[1]);
-	close(fd[2]);
+	close(fd);
 	return (0);
 }
 
